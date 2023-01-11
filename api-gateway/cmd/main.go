@@ -2,6 +2,11 @@ package main
 
 import (
 	"api-gateway/config"
+	"api-gateway/discovery"
+	"api-gateway/internal/service"
+	"api-gateway/middleware/wrapper"
+	"api-gateway/pkg/utils"
+	"api-gateway/routes"
 	"context"
 	"fmt"
 	"net/http"
@@ -9,6 +14,11 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/resolver"
 )
 
 func main() {

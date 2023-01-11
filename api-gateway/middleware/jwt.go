@@ -2,9 +2,10 @@ package middleware
 
 import (
 	"api-gateway/pkg/e"
-	"api-gateway/pkg/util"
-	"github.com/gin-gonic/gin"
+	"api-gateway/pkg/utils"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 // JWT token验证中间件
@@ -17,7 +18,7 @@ func JWT() gin.HandlerFunc {
 		if token == "" {
 			code = 404
 		} else {
-			claims, err := util.ParseToken(token)
+			claims, err := utils.ParseToken(token)
 			if err != nil {
 				code = e.ErrorAuthCheckTokenFail
 			} else if time.Now().Unix() > claims.ExpiresAt {

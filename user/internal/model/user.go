@@ -45,7 +45,7 @@ func (user *User) ShowUserInfo(req *service.UserRequest) (err error) {
 	if exist := user.CheckUserExist(req); exist {
 		return nil
 	}
-	return errors.New("UserName Not Exist")
+	return errors.New("Account Not Exist")
 }
 
 // 视图返回
