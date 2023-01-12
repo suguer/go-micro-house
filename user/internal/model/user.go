@@ -10,8 +10,14 @@ import (
 
 type User struct {
 	gorm.Model
+	Name     string
+	Nickname string
 	Account  string
 	Password string
+	Phone    string
+	Status   string
+	Avatar   string
+	Deposit  float32
 }
 
 const (
@@ -51,8 +57,15 @@ func (user *User) ShowUserInfo(req *service.UserRequest) (err error) {
 // 视图返回
 func BuildUser(item User) *service.UserModel {
 	userModel := service.UserModel{
-		Id:      uint32(item.ID),
-		Account: item.Account,
+		Id:        uint32(item.ID),
+		Account:   item.Account,
+		Name:      item.Name,
+		NickName:  item.Nickname,
+		Phone:     item.Phone,
+		CreatedAt: item.CreatedAt.Format("2006-01-02 15:04:05"),
+		Deposit:   item.Deposit,
+		Status:    item.Status,
+		Avatar:    item.Avatar,
 	}
 	return &userModel
 }

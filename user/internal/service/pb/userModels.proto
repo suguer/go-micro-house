@@ -21,4 +21,6 @@ message UserModel {
     float Deposit=7;
     // @inject_tag: json:"status"
     string Status=8;
+    // @inject_tag: json:"avatar"
+    string Avatar=9;
 }
