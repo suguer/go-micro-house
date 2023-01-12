@@ -11,3 +11,8 @@ type UserPlatform struct {
 	Platform string
 	UserId   uint
 }
+
+func (platform *UserPlatform) SelectByUserId(UserId string) ([]UserPlatform, error) {
+	var list []UserPlatform
+	return list, nil
+}

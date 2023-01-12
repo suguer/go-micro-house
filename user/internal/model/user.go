@@ -54,7 +54,6 @@ func (user *User) ShowUserInfo(req *service.UserRequest) (err error) {
 	return errors.New("Account Not Exist")
 }
 
-// 视图返回
 func BuildUser(item User) *service.UserModel {
 	userModel := service.UserModel{
 		Id:        uint32(item.ID),

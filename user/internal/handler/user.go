@@ -24,6 +24,16 @@ func (*UserService) Login(ctx context.Context, req *service.UserRequest) (resp *
 	resp.UserDetail = model.BuildUser(user)
 	return resp, nil
 }
+func (*UserService) Info(ctx context.Context, req *service.UserRequest) (resp *service.UserDetailResponse, err error) {
+	var user model.User
+	resp = new(service.UserDetailResponse)
+	model.DB.Model(&model.User{}).Find(req.Id, &user)
+	resp.UserDetail = model.BuildUser(user)
+	var vip model.Vip
+	err = vip.FindActiveById(req.Id)
+	resp.Vip = model.BuildVip(vip)
+	return resp, err
+}
 
 func (*UserService) Create(ctx context.Context, req *service.UserRequest) (resp *service.UserDetailResponse, err error) {
 	user := &model.User{

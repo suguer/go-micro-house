@@ -18,7 +18,7 @@ message UserRequest{
 
 message UserDetailResponse{
   UserModel UserDetail=1;
-  UserPlatformModel Platform=2;
+  repeated UserPlatformModel Platform=2;
   UserVipModel Vip=3;
   uint32 Code=4;
 }

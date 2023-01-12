@@ -7,7 +7,7 @@ message UserPlatformModel {
     // @inject_tag: json:"id"
     uint32 Id=1;
     // @inject_tag: json:"user_id"
-    string UserId=2;
+    uint32 UserId=2;
     // @inject_tag: json:"openid"
     string Openid=3;
     // @inject_tag: json:"token"
@@ -17,5 +17,5 @@ message UserPlatformModel {
     // @inject_tag: json:"created_at"
     string CreatedAt=6;
     // @inject_tag: json:"updated_at"
-    float UpdatedAt=7;
+    string UpdatedAt=7;
 }
