@@ -9,4 +9,16 @@ message UserModel {
     uint32 Id=1;
     // @inject_tag: json:"account"
     string Account=2;
+    // @inject_tag: json:"name"
+    string Name=3;
+    // @inject_tag: json:"nick_name"
+    string NickName=4;
+    // @inject_tag: json:"phone"
+    string Phone=5;
+    // @inject_tag: json:"created_at"
+    string CreatedAt=6;
+    // @inject_tag: json:"deposit"
+    float Deposit=7;
+    // @inject_tag: json:"status"
+    string Status=8;
 }

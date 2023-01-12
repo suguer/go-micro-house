@@ -20,5 +20,8 @@ message UserDetailResponse{
 
 
 service UserService{
-    rpc UserLogin(UserRequest) returns(UserDetailResponse);
+    rpc Login(UserRequest) returns(UserDetailResponse);
+    rpc Create(UserRequest) returns(UserDetailResponse);
+    rpc CreateByWechat(UserRequest) returns(UserDetailResponse);
+    rpc Update(UserRequest) returns(UserDetailResponse);
 }
