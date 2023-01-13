@@ -7,11 +7,13 @@ import (
 )
 
 // 接受服务实例，并存到gin.Key中
-func InitMiddleware(service []interface{}) gin.HandlerFunc {
+func InitMiddleware(services map[string]interface{}) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		// 将实例存在gin.Keys中
 		context.Keys = make(map[string]interface{})
-		context.Keys["user"] = service[0]
+		for k, v := range services {
+			context.Keys[k] = v
+		}
 		context.Next()
 	}
 }

@@ -9,9 +9,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewRouter(service ...interface{}) *gin.Engine {
+type Router struct {
+	Services map[string]interface{}
+}
+
+func NewRouter() *Router {
+	return &Router{
+		Services: make(map[string]interface{}),
+	}
+}
+func (r *Router) AddService(name string, service interface{}) {
+	r.Services[name] = service
+}
+func (r *Router) Start() *gin.Engine {
 	ginRouter := gin.Default()
-	ginRouter.Use(middleware.Cors(), middleware.InitMiddleware(service), middleware.ErrorMiddleware())
+	ginRouter.Use(middleware.Cors(), middleware.InitMiddleware(r.Services), middleware.ErrorMiddleware())
 	store := cookie.NewStore([]byte("something-very-secret"))
 	ginRouter.Use(sessions.Sessions("mysession", store))
 	v1 := ginRouter.Group("/api/v1")

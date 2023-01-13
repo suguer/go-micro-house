@@ -39,27 +39,27 @@ func startListen() {
 	etcdRegister := discovery.NewResolver(etcdAddress, logrus.New())
 	resolver.Register(etcdRegister)
 	ctx, _ := context.WithTimeout(context.Background(), 3*time.Second)
-	// 服务名
-	userServiceName := viper.GetString("domain.user")
-
-	// RPC 连接
-	connUser, err := RPCConnect(ctx, userServiceName, etcdRegister)
-	if err != nil {
-		return
+	ginRouter := routes.NewRouter()
+	arr := viper.GetStringSlice("domain")
+	for _, ServiceName := range arr {
+		// RPC 连接
+		conn, err := RPCConnect(ctx, ServiceName, etcdRegister)
+		if err != nil {
+			return
+		}
+		Service := service.NewUserServiceClient(conn)
+		wrapper.NewServiceWrapper(ServiceName)
+		ginRouter.AddService(ServiceName, Service)
 	}
-	userService := service.NewUserServiceClient(connUser)
-
-	wrapper.NewServiceWrapper(userServiceName)
-
-	ginRouter := routes.NewRouter(userService)
+	ginEngine := ginRouter.Start()
 	server := &http.Server{
 		Addr:           viper.GetString("server.port"),
-		Handler:        ginRouter,
+		Handler:        ginEngine,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
-	err = server.ListenAndServe()
+	err := server.ListenAndServe()
 	if err != nil {
 		fmt.Println("绑定HTTP到 %s 失败！可能是端口已经被占用，或用户权限不足")
 		fmt.Println(err)
