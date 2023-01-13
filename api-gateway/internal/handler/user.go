@@ -44,3 +44,11 @@ func (*UserService) Create(ginCtx *gin.Context) {
 	}
 	ginCtx.JSON(http.StatusOK, r)
 }
+func (*UserService) Update(ginCtx *gin.Context) {
+	var userReq service.UserModel
+	PanicIfUserError(ginCtx.Bind(&userReq))
+	userService := ginCtx.Keys["user"].(service.UserServiceClient)
+	userService.Update(context.Background(), &userReq)
+	r := res.Response{}
+	ginCtx.JSON(http.StatusOK, r)
+}

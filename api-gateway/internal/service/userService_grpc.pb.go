@@ -23,9 +23,10 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	Login(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserDetailResponse, error)
+	Info(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserDetailResponse, error)
 	Create(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserDetailResponse, error)
 	CreateByWechat(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserDetailResponse, error)
-	Update(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserDetailResponse, error)
+	Update(ctx context.Context, in *UserModel, opts ...grpc.CallOption) (*Response, error)
 }
 
 type userServiceClient struct {
@@ -39,6 +40,15 @@ func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 func (c *userServiceClient) Login(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserDetailResponse, error) {
 	out := new(UserDetailResponse)
 	err := c.cc.Invoke(ctx, "/pb.UserService/Login", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) Info(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserDetailResponse, error) {
+	out := new(UserDetailResponse)
+	err := c.cc.Invoke(ctx, "/pb.UserService/Info", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -63,8 +73,8 @@ func (c *userServiceClient) CreateByWechat(ctx context.Context, in *UserRequest,
 	return out, nil
 }
 
-func (c *userServiceClient) Update(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserDetailResponse, error) {
-	out := new(UserDetailResponse)
+func (c *userServiceClient) Update(ctx context.Context, in *UserModel, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
 	err := c.cc.Invoke(ctx, "/pb.UserService/Update", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -77,9 +87,10 @@ func (c *userServiceClient) Update(ctx context.Context, in *UserRequest, opts ..
 // for forward compatibility
 type UserServiceServer interface {
 	Login(context.Context, *UserRequest) (*UserDetailResponse, error)
+	Info(context.Context, *UserRequest) (*UserDetailResponse, error)
 	Create(context.Context, *UserRequest) (*UserDetailResponse, error)
 	CreateByWechat(context.Context, *UserRequest) (*UserDetailResponse, error)
-	Update(context.Context, *UserRequest) (*UserDetailResponse, error)
+	Update(context.Context, *UserModel) (*Response, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -90,13 +101,16 @@ type UnimplementedUserServiceServer struct {
 func (UnimplementedUserServiceServer) Login(context.Context, *UserRequest) (*UserDetailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
+func (UnimplementedUserServiceServer) Info(context.Context, *UserRequest) (*UserDetailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Info not implemented")
+}
 func (UnimplementedUserServiceServer) Create(context.Context, *UserRequest) (*UserDetailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
 func (UnimplementedUserServiceServer) CreateByWechat(context.Context, *UserRequest) (*UserDetailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateByWechat not implemented")
 }
-func (UnimplementedUserServiceServer) Update(context.Context, *UserRequest) (*UserDetailResponse, error) {
+func (UnimplementedUserServiceServer) Update(context.Context, *UserModel) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
@@ -126,6 +140,24 @@ func _UserService_Login_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).Login(ctx, req.(*UserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_Info_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).Info(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.UserService/Info",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).Info(ctx, req.(*UserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -167,7 +199,7 @@ func _UserService_CreateByWechat_Handler(srv interface{}, ctx context.Context, d
 }
 
 func _UserService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserRequest)
+	in := new(UserModel)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -179,7 +211,7 @@ func _UserService_Update_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: "/pb.UserService/Update",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).Update(ctx, req.(*UserRequest))
+		return srv.(UserServiceServer).Update(ctx, req.(*UserModel))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -194,6 +226,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Login",
 			Handler:    _UserService_Login_Handler,
+		},
+		{
+			MethodName: "Info",
+			Handler:    _UserService_Info_Handler,
 		},
 		{
 			MethodName: "Create",

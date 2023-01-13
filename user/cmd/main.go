@@ -25,8 +25,10 @@ func main() {
 	grpcAddress := viper.GetString("server.grpcAddress")
 	defer etcdRegister.Stop()
 	userNode := discovery.Server{
-		Name: viper.GetString("server.domain"),
-		Addr: grpcAddress,
+		Name:    viper.GetString("server.domain"),
+		Addr:    grpcAddress,
+		Author:  "Ken",
+		Version: "v1",
 	}
 	server := grpc.NewServer()
 	defer server.Stop()

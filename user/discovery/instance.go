@@ -14,6 +14,7 @@ type Server struct {
 	Addr    string `json:"addr"`    // 地址
 	Version string `json:"version"` // 版本
 	Weight  int64  `json:"weight"`  // 权重
+	Author  string `json:"author"`  // 作者
 }
 
 func BuildPrefix(server Server) string {

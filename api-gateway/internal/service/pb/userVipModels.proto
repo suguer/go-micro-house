@@ -1,0 +1,23 @@
+syntax="proto3";
+package pb;
+option go_package = "/internal/service;service";
+
+
+message UserVipModel {
+    // @inject_tag: json:"id"
+    uint32 Id=1;
+    // @inject_tag: json:"user_id"
+    uint32 UserId=2;
+    // @inject_tag: json:"start_at"
+    string StartAt=3;
+    // @inject_tag: json:"end_at"
+    string EndAt=4;
+    // @inject_tag: json:"level"
+    string Level=5;
+    // @inject_tag: json:"created_at"
+    string CreatedAt=6;
+    // @inject_tag: json:"updated_at"
+    float UpdatedAt=7;
+    // @inject_tag: json:"status"
+    string Status=8;
+}

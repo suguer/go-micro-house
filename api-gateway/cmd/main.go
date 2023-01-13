@@ -49,7 +49,6 @@ func startListen() {
 	}
 	userService := service.NewUserServiceClient(connUser)
 
-	// 加入熔断 TODO main太臃肿了
 	wrapper.NewServiceWrapper(userServiceName)
 
 	ginRouter := routes.NewRouter(userService)

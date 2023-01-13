@@ -22,13 +22,24 @@ message UserDetailResponse{
   UserVipModel Vip=3;
   uint32 Code=4;
 }
+message Response{
+  uint32 Code=1;
+}
 
-
+message LoginByWechatRequest{
+   // @inject_tag: json:"session_key" form:"session_key" uri:"session_key"
+   string SessionKey=1;
+   // @inject_tag: json:"iv" form:"iv" uri:"iv"
+   string Iv=2;
+   // @inject_tag: json:"encrypted_data" form:"encrypted_data" uri:"encrypted_data"
+   string EncryptedData=3;
+}
 
 service UserService{
     rpc Login(UserRequest) returns(UserDetailResponse);
+    rpc LoginByWechat(LoginByWechatRequest) returns(UserDetailResponse);
+    rpc ModifyPassword(UserRequest) returns(Response);
     rpc Info(UserRequest) returns(UserDetailResponse);
     rpc Create(UserRequest) returns(UserDetailResponse);
-    rpc CreateByWechat(UserRequest) returns(UserDetailResponse);
-    rpc Update(UserRequest) returns(UserDetailResponse);
+    rpc Update(UserModel) returns(Response);
 }

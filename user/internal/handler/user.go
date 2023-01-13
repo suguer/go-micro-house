@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"strconv"
 	"user/internal/model"
 	"user/internal/service"
 )
@@ -21,9 +22,14 @@ func (*UserService) Login(ctx context.Context, req *service.UserRequest) (resp *
 	if err != nil {
 		return resp, err
 	}
+	err = user.CheckPassword(req.Password)
+	if err != nil {
+		return resp, err
+	}
 	resp.UserDetail = model.BuildUser(user)
 	return resp, nil
 }
+
 func (*UserService) Info(ctx context.Context, req *service.UserRequest) (resp *service.UserDetailResponse, err error) {
 	var user model.User
 	resp = new(service.UserDetailResponse)
@@ -32,6 +38,11 @@ func (*UserService) Info(ctx context.Context, req *service.UserRequest) (resp *s
 	var vip model.Vip
 	err = vip.FindActiveById(req.Id)
 	resp.Vip = model.BuildVip(vip)
+	var platform model.UserPlatform
+	l, _ := platform.SelectByUserId(req.Id)
+	for _, up := range l {
+		resp.Platform = append(resp.Platform, model.BuildUserPlatform(up))
+	}
 	return resp, err
 }
 
@@ -45,9 +56,21 @@ func (*UserService) Create(ctx context.Context, req *service.UserRequest) (resp 
 	return resp, nil
 }
 
-// func (*UserService) CreateByWechat(ctx context.Context, req *service.UserRequest) (resp *service.UserDetailResponse, err error) {
+// func (*UserService) LoginByWechat(ctx context.Context, req *service.LoginByWechatRequest) (resp *service.UserDetailResponse, err error) {
 // 	return resp, nil
 // }
-// func (*UserService) Update(ctx context.Context, req *service.UserRequest) (resp *service.UserDetailResponse, err error) {
-// 	return resp, nil
-// }
+
+func (*UserService) Update(ctx context.Context, req *service.UserModel) (resp *service.Response, err error) {
+	var user model.User
+	resp = new(service.Response)
+	model.DB.Model(&model.User{}).Find(req.Id, &user)
+	err = user.SaveByService(req)
+	return resp, err
+}
+
+func (*UserService) ModifyPassword(ctx context.Context, req *service.UserModel) (resp *service.Response, err error) {
+	var user model.User
+	resp = new(service.Response)
+	err = user.CheckUserIdExist(strconv.Itoa(int(req.Id)))
+	return resp, err
+}

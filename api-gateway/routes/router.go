@@ -24,6 +24,7 @@ func NewRouter(service ...interface{}) *gin.Engine {
 		// v1.POST("/user/register", handler.UserRegister)
 		v1.POST("/user/login", User.Login)
 		v1.POST("/user/create", User.Create)
+		v1.POST("/user/update", User.Update)
 
 		// 需要登录保护
 		// authed := v1.Group("/")
