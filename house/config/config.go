@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"user/pkg/utils"
+	"house/pkg/utils"
 
 	"github.com/spf13/viper"
 )

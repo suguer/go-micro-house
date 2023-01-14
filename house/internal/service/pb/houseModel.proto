@@ -1,0 +1,34 @@
+syntax="proto3";
+package pb;
+option go_package = "/internal/service;service";
+
+message HouseModel{
+    // @inject_tag: json:"id"
+    uint32 Id=1;
+    // @inject_tag: json:"user_id"
+    uint32 UserId=2;
+    // @inject_tag: json:"title"
+    string Title=3;
+    // @inject_tag: json:"cycle"
+    uint32 Cycle=4;
+    // @inject_tag: json:"contract_id"
+    uint32 ContractId=5;
+    // @inject_tag: json:"status"
+    string Status=6;
+    // @inject_tag: json:"money"
+    float Money=7;
+  // @inject_tag: json:"created_at"
+  string CreatedAt=8;
+  // @inject_tag: json:"province"
+  string Province=9;
+  // @inject_tag: json:"city"
+  string City=10;
+  // @inject_tag: json:"region"
+  string Region=11;
+  // @inject_tag: json:"linkname"
+  string Linkname=12;
+  // @inject_tag: json:"linkphone"
+  string Linkphone=13;
+  // @inject_tag: json:"remark"
+  string Remark=14;
+}

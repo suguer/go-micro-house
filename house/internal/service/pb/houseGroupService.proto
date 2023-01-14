@@ -1,0 +1,40 @@
+syntax="proto3";
+package pb;
+import "houseGroupModel.proto";
+option go_package = "/internal/service;service";
+
+message HouseGroupIndexRequest{
+    
+}
+message HouseGroupIndexResponse{
+   repeated HouseGroupModel HouseGroupModel=1;
+
+}
+
+message HouseGroupRequest{
+     // @inject_tag: json:"name" form:"name" uri:"name"
+ string Name=1;
+     // @inject_tag: json:"user_id" form:"user_id" uri:"user_id"
+ uint32 UserId=2;
+     // @inject_tag: json:"group_id" form:"group_id" uri:"group_id"
+ uint32 GroupId=3;
+     // @inject_tag: json:"house_id" form:"house_id" uri:"house_id"
+ uint32 HouseId=4;
+
+}
+
+message HouseGroupResponse{
+    HouseGroupModel HouseGroupModel=1;
+ uint32 Code=2;
+
+
+}
+
+service HouseGroupService{
+    rpc Index(HouseGroupRequest) returns(HouseGroupResponse);
+    rpc Create(HouseGroupRequest) returns(HouseGroupResponse);
+    rpc Remove(HouseGroupRequest) returns(HouseGroupResponse);
+    rpc Join(HouseGroupRequest) returns(HouseGroupResponse);
+    rpc Leave(HouseGroupRequest) returns(HouseGroupResponse);
+
+}

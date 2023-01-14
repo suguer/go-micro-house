@@ -1,0 +1,33 @@
+syntax="proto3";
+package pb;
+option go_package = "/internal/service;service";
+
+//protoc -I internal/service/pb internal/service/pb/*.proto --go_out=plugins=grpc:.
+
+message HouseGroupModel {
+  // @inject_tag: json:"id"
+  uint32 Id=1;
+  // @inject_tag: json:"name"
+  string Name=2;
+  // @inject_tag: json:"status"
+  string Status=3;
+    // @inject_tag: json:"user_id"
+    uint32 UserId=4;
+      // @inject_tag: json:"created_at"
+      string CreatedAt=5;
+      // @inject_tag: json:"updated_at"
+      string UpdatedAt=6;
+}
+
+message HouseGroupRelationModel {
+  // @inject_tag: json:"id"
+  uint32 Id=1;
+  // @inject_tag: json:"house_id"
+  uint32 HouseId=2;
+  // @inject_tag: json:"group_id"
+  uint32 GroupId=3;
+      // @inject_tag: json:"created_at"
+      string CreatedAt=4;
+      // @inject_tag: json:"updated_at"
+      string UpdatedAt=5;
+}
