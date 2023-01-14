@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"strconv"
 	"user/internal/model"
 	"user/internal/service"
 )
@@ -68,9 +67,9 @@ func (*UserService) Update(ctx context.Context, req *service.UserModel) (resp *s
 	return resp, err
 }
 
-func (*UserService) ModifyPassword(ctx context.Context, req *service.UserModel) (resp *service.Response, err error) {
+func (*UserService) ModifyPassword(ctx context.Context, req *service.UserRequest) (resp *service.Response, err error) {
 	var user model.User
 	resp = new(service.Response)
-	err = user.CheckUserIdExist(strconv.Itoa(int(req.Id)))
+	err = user.CheckUserIdExist(req.Id)
 	return resp, err
 }

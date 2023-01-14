@@ -4,7 +4,6 @@ import (
 	"api-gateway/config"
 	"api-gateway/discovery"
 	"api-gateway/internal/service"
-	"api-gateway/middleware/wrapper"
 	"api-gateway/pkg/utils"
 	"api-gateway/routes"
 	"context"
@@ -23,6 +22,8 @@ import (
 
 func main() {
 	config.InitConfig()
+	arr := viper.GetStringMap("domain")
+	fmt.Printf("arr: %v\n", arr)
 	go startListen() //转载路由
 	{
 		osSignals := make(chan os.Signal, 1)
@@ -40,15 +41,17 @@ func startListen() {
 	resolver.Register(etcdRegister)
 	ctx, _ := context.WithTimeout(context.Background(), 3*time.Second)
 	ginRouter := routes.NewRouter()
-	arr := viper.GetStringSlice("domain")
-	for _, ServiceName := range arr {
+	arr := viper.GetStringMapString("domain")
+	for ServiceName, ServicePath := range arr {
+		fmt.Printf("ServiceName: %v\n", ServiceName)
 		// RPC 连接
-		conn, err := RPCConnect(ctx, ServiceName, etcdRegister)
+		conn, err := RPCConnect(ctx, ServicePath, etcdRegister)
 		if err != nil {
 			return
 		}
-		Service := service.NewUserServiceClient(conn)
-		wrapper.NewServiceWrapper(ServiceName)
+		Service := GetService(ServiceName, conn)
+		// Service := service.NewHouseServiceClient(conn)
+		// wrapper.NewServiceWrapper(ServiceName)
 		ginRouter.AddService(ServiceName, Service)
 	}
 	ginEngine := ginRouter.Start()
@@ -71,6 +74,18 @@ func startListen() {
 	if err := server.ListenAndServe(); err != nil {
 		fmt.Println("gateway启动失败, err: ", err)
 	}
+}
+
+func GetService(serviceName string, conn *grpc.ClientConn) interface{} {
+	switch serviceName {
+	case "user":
+		return service.NewUserServiceClient(conn)
+	case "house":
+		return service.NewHouseServiceClient(conn)
+	case "house_group":
+		return service.NewHouseGroupServiceClient(conn)
+	}
+	return nil
 }
 
 func RPCConnect(ctx context.Context, serviceName string, etcdRegister *discovery.Resolver) (conn *grpc.ClientConn, err error) {

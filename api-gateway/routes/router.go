@@ -31,13 +31,22 @@ func (r *Router) Start() *gin.Engine {
 		v1.GET("ping", func(context *gin.Context) {
 			context.JSON(200, "success")
 		})
-		User := &handler.UserService{}
-		// 用户服务
-		// v1.POST("/user/register", handler.UserRegister)
-		v1.POST("/user/login", User.Login)
-		v1.POST("/user/create", User.Create)
-		v1.POST("/user/update", User.Update)
+		userGroup := v1.Group("/user")
+		{
+			User := &handler.UserService{}
+			userGroup.POST("/login", User.Login)
+			userGroup.POST("/create", User.Create)
+			userGroup.POST("/update", User.Update)
+		}
 
+		// 用户服务
+
+		houseGroup := v1.Group("/house")
+		{
+			House := &handler.HouseService{}
+			houseGroup.GET("/index", House.Index)
+			houseGroup.GET("/group_index", House.GroupIndex)
+		}
 		// 需要登录保护
 		// authed := v1.Group("/")
 		// authed.Use(middleware.JWT())

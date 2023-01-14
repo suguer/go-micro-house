@@ -12,4 +12,5 @@ etcd:
 
 domain:
   user: user
-  task: task
+  house: house
+  house_group: house
