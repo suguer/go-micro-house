@@ -1,14 +1,22 @@
 syntax="proto3";
 package pb;
 import "houseGroupModel.proto";
+import "pagination.proto";
 option go_package = "/internal/service;service";
 
 message HouseGroupIndexRequest{
+     // @inject_tag: json:"current" form:"current" uri:"current"
+ uint32 Current=1;
+ // @inject_tag: json:"pageSize" form:"pageSize" uri:"pageSize"
+ uint32 PageSize=2;
+  // @inject_tag: json:"user_id" form:"user_id" uri:"user_id"
+  uint32 UserId=3;
     
 }
 message HouseGroupIndexResponse{
    repeated HouseGroupModel HouseGroupModel=1;
-
+   Pagination Pagination=2;
+    uint32 Code=3;
 }
 
 message HouseGroupRequest{
@@ -31,7 +39,7 @@ message HouseGroupResponse{
 }
 
 service HouseGroupService{
-    rpc Index(HouseGroupRequest) returns(HouseGroupResponse);
+    rpc Index(HouseGroupIndexRequest) returns(HouseGroupIndexResponse);
     rpc Create(HouseGroupRequest) returns(HouseGroupResponse);
     rpc Remove(HouseGroupRequest) returns(HouseGroupResponse);
     rpc Join(HouseGroupRequest) returns(HouseGroupResponse);

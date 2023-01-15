@@ -1,15 +1,20 @@
 syntax="proto3";
 package pb;
 import "houseModel.proto";
+import "pagination.proto";
 option go_package = "/internal/service;service";
 
 message HouseRequest{
- // @inject_tag: json:"id" form:"id" uri:"id"
- string Id=1;
+ // @inject_tag: json:"data" form:"data" uri:"data"
+ HouseModel Data=1;
+ // @inject_tag: json:"level" form:"level" uri:"level"
+ string Level=2;
 }
+
 
 message HouseDetailResponse{
     HouseModel Data=1;
+    int32 Code=2;
 }
 message HouseIndexRequest{
  // @inject_tag: json:"id" form:"id" uri:"id"
@@ -22,9 +27,18 @@ message HouseIndexRequest{
  string Status=4;
  // @inject_tag: json:"group_id" form:"group_id" uri:"group_id"
  uint32 GroupId=5;
+ // @inject_tag: json:"current" form:"current" uri:"current"
+ uint32 Current=6;
+ // @inject_tag: json:"pageSize" form:"pageSize" uri:"pageSize"
+ uint32 PageSize=7;
+ // @inject_tag: json:"user_id" form:"user_id" uri:"user_id"
+ uint32 UserId=8;
+
+
 }
 message HouseIndexResponse{
     repeated HouseModel Data=1;
+    Pagination Pagination=2;
 }
 
 service HouseService{
