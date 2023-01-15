@@ -47,6 +47,7 @@ func startListen() {
 		// RPC 连接
 		conn, err := RPCConnect(ctx, ServicePath, etcdRegister)
 		if err != nil {
+			fmt.Printf("err: %v\n", err)
 			return
 		}
 		Service := GetService(ServiceName, conn)

@@ -22,11 +22,14 @@ func (*UserService) Login(ginCtx *gin.Context) {
 	userService := ginCtx.Keys["user"].(service.UserServiceClient)
 	userResp, err := userService.Login(context.Background(), &userReq)
 	PanicIfUserError(err)
-	token, err := utils.GenerateToken(uint(userResp.UserDetail.Id))
+	token, _ := utils.GenerateToken(uint(userResp.UserDetail.Id))
 	r := res.Response{
-		Data:   res.TokenData{User: userResp.UserDetail, Token: token},
-		Status: uint(userResp.Code),
-		Msg:    e.GetMsg(uint(userResp.Code)),
+		Data: map[string]interface{}{
+			"User":  userResp.UserDetail,
+			"Token": token,
+		},
+		Code:  uint(userResp.Code),
+		Error: e.GetMsg(uint(userResp.Code)),
 	}
 	ginCtx.JSON(http.StatusOK, r)
 }
@@ -38,9 +41,12 @@ func (*UserService) Create(ginCtx *gin.Context) {
 	userResp, _ := userService.Create(context.Background(), &userReq)
 	token, _ := utils.GenerateToken(uint(userResp.UserDetail.Id))
 	r := res.Response{
-		Data:   res.TokenData{User: userResp.UserDetail, Token: token},
-		Status: uint(userResp.Code),
-		Msg:    e.GetMsg(uint(userResp.Code)),
+		Data: map[string]interface{}{
+			"User":  userResp.UserDetail,
+			"Token": token,
+		},
+		Code:  uint(userResp.Code),
+		Error: e.GetMsg(uint(userResp.Code)),
 	}
 	ginCtx.JSON(http.StatusOK, r)
 }

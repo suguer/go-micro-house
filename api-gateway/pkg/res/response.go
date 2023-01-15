@@ -9,23 +9,36 @@ import (
 
 // Response 基础序列化器
 type Response struct {
-	Status uint        `json:"Status"`
-	Data   interface{} `json:"Data"`
-	Msg    string      `json:"Msg"`
-	Error  string      `json:"Error"`
-	Code   int         `json:"Code"`
+	Data  interface{} `json:"Data"`
+	Error string      `json:"Error"`
+	Code  uint        `json:"Code"`
 }
 
-// DataList 带有总数的Data结构
-type DataList struct {
-	Item  interface{} `json:"Item"`
-	Total uint        `json:"Total"`
+type PageResponse struct {
+	Data       interface{} `json:"Data"`
+	Error      string      `json:"Error"`
+	Code       uint        `json:"Code"`
+	Pagination interface{} `json:"Pagination"`
 }
 
-// TokenData 带有token的Data结构
-type TokenData struct {
-	User  interface{} `json:"User"`
-	Token string      `json:"Token"`
+type Pagination struct {
+	Total    int64 `json:"total" `
+	Current  int   `json:"current" form:"current"`
+	PageSize int   `json:"pageSize" form:"pageSize"`
+}
+
+func (m *Pagination) GetPageCurrent() int {
+	if m.Current <= 0 {
+		m.Current = 1
+	}
+	return m.Current
+}
+
+func (m *Pagination) GetPageSize() int {
+	if m.PageSize <= 0 {
+		m.PageSize = 10
+	}
+	return m.PageSize
 }
 
 // 返回200 自定义code data

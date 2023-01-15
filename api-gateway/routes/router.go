@@ -43,9 +43,15 @@ func (r *Router) Start() *gin.Engine {
 
 		houseGroup := v1.Group("/house")
 		{
-			House := &handler.HouseService{}
-			houseGroup.GET("/index", House.Index)
-			houseGroup.GET("/group_index", House.GroupIndex)
+			s := &handler.HouseService{}
+			houseGroup.GET("/index", s.Index)
+			houseGroupGroup := houseGroup.Group("/group")
+			{
+				s := &handler.HouseGroupService{}
+				houseGroupGroup.GET("/index", s.Index)
+				houseGroupGroup.POST("/create", s.Create)
+
+			}
 		}
 		// 需要登录保护
 		// authed := v1.Group("/")

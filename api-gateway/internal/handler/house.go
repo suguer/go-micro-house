@@ -4,6 +4,7 @@ import (
 	"api-gateway/internal/service"
 	"api-gateway/pkg/res"
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,20 +17,11 @@ func (*HouseService) Index(ginCtx *gin.Context) {
 	var req service.HouseIndexRequest
 	PanicIfUserError(ginCtx.Bind(&req))
 	ser := ginCtx.Keys["house"].(service.HouseServiceClient)
-	resp, _ := ser.Index(context.Background(), &req)
-	r := res.Response{
-		Data: resp.Data,
-	}
-	ginCtx.JSON(http.StatusOK, r)
-}
-
-func (*HouseService) GroupIndex(ginCtx *gin.Context) {
-	var req service.HouseGroupRequest
-	PanicIfUserError(ginCtx.Bind(&req))
-	ser := ginCtx.Keys["house_group"].(service.HouseGroupServiceClient)
-	resp, _ := ser.Index(context.Background(), &req)
-	r := res.Response{
-		Code: int(resp.Code),
+	resp, err := ser.Index(context.Background(), &req)
+	fmt.Printf("err: %v\n", err)
+	r := res.PageResponse{
+		Data:       resp.Data,
+		Pagination: resp.Pagination,
 	}
 	ginCtx.JSON(http.StatusOK, r)
 }

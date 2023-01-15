@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type HouseGroupServiceClient interface {
-	Index(ctx context.Context, in *HouseGroupRequest, opts ...grpc.CallOption) (*HouseGroupResponse, error)
+	Index(ctx context.Context, in *HouseGroupIndexRequest, opts ...grpc.CallOption) (*HouseGroupIndexResponse, error)
 	Create(ctx context.Context, in *HouseGroupRequest, opts ...grpc.CallOption) (*HouseGroupResponse, error)
 	Remove(ctx context.Context, in *HouseGroupRequest, opts ...grpc.CallOption) (*HouseGroupResponse, error)
 	Join(ctx context.Context, in *HouseGroupRequest, opts ...grpc.CallOption) (*HouseGroupResponse, error)
@@ -37,8 +37,8 @@ func NewHouseGroupServiceClient(cc grpc.ClientConnInterface) HouseGroupServiceCl
 	return &houseGroupServiceClient{cc}
 }
 
-func (c *houseGroupServiceClient) Index(ctx context.Context, in *HouseGroupRequest, opts ...grpc.CallOption) (*HouseGroupResponse, error) {
-	out := new(HouseGroupResponse)
+func (c *houseGroupServiceClient) Index(ctx context.Context, in *HouseGroupIndexRequest, opts ...grpc.CallOption) (*HouseGroupIndexResponse, error) {
+	out := new(HouseGroupIndexResponse)
 	err := c.cc.Invoke(ctx, "/pb.HouseGroupService/Index", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -86,7 +86,7 @@ func (c *houseGroupServiceClient) Leave(ctx context.Context, in *HouseGroupReque
 // All implementations must embed UnimplementedHouseGroupServiceServer
 // for forward compatibility
 type HouseGroupServiceServer interface {
-	Index(context.Context, *HouseGroupRequest) (*HouseGroupResponse, error)
+	Index(context.Context, *HouseGroupIndexRequest) (*HouseGroupIndexResponse, error)
 	Create(context.Context, *HouseGroupRequest) (*HouseGroupResponse, error)
 	Remove(context.Context, *HouseGroupRequest) (*HouseGroupResponse, error)
 	Join(context.Context, *HouseGroupRequest) (*HouseGroupResponse, error)
@@ -98,7 +98,7 @@ type HouseGroupServiceServer interface {
 type UnimplementedHouseGroupServiceServer struct {
 }
 
-func (UnimplementedHouseGroupServiceServer) Index(context.Context, *HouseGroupRequest) (*HouseGroupResponse, error) {
+func (UnimplementedHouseGroupServiceServer) Index(context.Context, *HouseGroupIndexRequest) (*HouseGroupIndexResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Index not implemented")
 }
 func (UnimplementedHouseGroupServiceServer) Create(context.Context, *HouseGroupRequest) (*HouseGroupResponse, error) {
@@ -127,7 +127,7 @@ func RegisterHouseGroupServiceServer(s grpc.ServiceRegistrar, srv HouseGroupServ
 }
 
 func _HouseGroupService_Index_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HouseGroupRequest)
+	in := new(HouseGroupIndexRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -139,7 +139,7 @@ func _HouseGroupService_Index_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: "/pb.HouseGroupService/Index",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HouseGroupServiceServer).Index(ctx, req.(*HouseGroupRequest))
+		return srv.(HouseGroupServiceServer).Index(ctx, req.(*HouseGroupIndexRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
