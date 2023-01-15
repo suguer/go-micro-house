@@ -1,0 +1,52 @@
+syntax="proto3";
+package pb;
+import "contractModel.proto";
+import "pagination.proto";
+option go_package = "/internal/service;service";
+
+
+message ContactRequest{
+    // @inject_tag: json:"data" form:"data" uri:"data"
+    ContractModel Data=1;
+    // @inject_tag: json:"level" form:"level" uri:"level"
+    string Level=2;
+}
+   
+message ContactDetailResponse{
+    ContractModel Data=1;
+    int32 Code=2;
+}
+
+message ContractIndexRequest{
+    // @inject_tag: json:"id" form:"id" uri:"id"
+    string Id=1;
+    // @inject_tag: json:"type" form:"type" uri:"type"
+    string Type=2;
+    // @inject_tag: json:"keyword" form:"keyword" uri:"keyword"
+    string Keyword=3;
+    // @inject_tag: json:"status" form:"status" uri:"status"
+    string Status=4;
+    // @inject_tag: json:"group_id" form:"group_id" uri:"group_id"
+    uint32 GroupId=5;
+    // @inject_tag: json:"current" form:"current" uri:"current"
+    uint32 Current=6;
+    // @inject_tag: json:"pageSize" form:"pageSize" uri:"pageSize"
+    uint32 PageSize=7;
+    // @inject_tag: json:"user_id" form:"user_id" uri:"user_id"
+    uint32 UserId=8;
+   
+   
+   }
+
+message ContractIndexResponse{
+    repeated ContractModel Data=1;
+    Pagination Pagination=2;
+}
+
+service ContractService{
+    rpc Index(ContractIndexRequest) returns(ContractIndexResponse);
+    rpc Create(ContactRequest) returns(ContactDetailResponse);
+    rpc Instance(ContactRequest) returns(ContactDetailResponse);
+    rpc Update(ContactRequest) returns(ContactDetailResponse);
+    rpc Delete(ContactRequest) returns(ContactDetailResponse);
+}

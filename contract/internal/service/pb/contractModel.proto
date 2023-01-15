@@ -1,0 +1,34 @@
+syntax="proto3";
+package pb;
+option go_package = "/internal/service;service";
+
+message ContractModel {
+      // @inject_tag: json:"id"
+      uint32 Id=1;
+      // @inject_tag: json:"user_id"
+      uint32 UserId=2;
+      // @inject_tag: json:"house_id"
+      uint32 HouseId=3;
+      // @inject_tag: json:"cycle"
+      uint32 Cycle=4;
+      // @inject_tag: json:"status"
+      string Status=5;
+      // @inject_tag: json:"start_at"
+      string StartAt=6;
+      // @inject_tag: json:"end_at"
+      string EndAt=7;
+    // @inject_tag: json:"money"
+    float Money=8;
+    // @inject_tag: json:"period"
+    uint32 Period=9;
+    // @inject_tag: json:"period_unit"
+    string PeriodUnit=10;
+    // @inject_tag: json:"remark"
+    string Remark=11;
+    // @inject_tag: json:"deposit"
+    float Deposit=12;
+    // @inject_tag: json:"owner_money"
+    float OwnerMoney=13;
+    // @inject_tag: json:"owner_user_id"
+    uint32 OwnerUserId=14;
+}
