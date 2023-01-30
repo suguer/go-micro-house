@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"push-gateway/internal/gateway"
 	"push-gateway/internal/model"
 	"push-gateway/internal/service"
@@ -17,14 +18,15 @@ func NewSmsService() *SmsService {
 
 func (*SmsService) Index(ctx context.Context, req *service.SmsIndexRequest) (resp *service.SmsIndexResponse, err error) {
 	resp = new(service.SmsIndexResponse)
-	var pagination service.Pagination
-	list := make([]model.Record, req.PageSize)
+	fmt.Printf("req: %v\n", req)
+	pagination := model.NewPagination(req.Current, req.PageSize)
+	var list []model.Record
 	err = model.DB.Model(&model.Record{}).
-		Scopes(model.Paginate(int(req.PageSize), int(req.Current))).
+		Scopes(pagination.Paginate()).
 		Where("user_id=?", req.UserId).
 		Find(&list).Limit(-1).Offset(-1).
 		Count(&pagination.Total).Error
-	resp.Pagination = &pagination
+	resp.Pagination = pagination.Build()
 	resp.Data = make([]*service.SmsRecordModel, len(list))
 	for i, hm := range list {
 		resp.Data[i] = model.BuildRecord(&hm)

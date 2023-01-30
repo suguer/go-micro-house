@@ -13,6 +13,10 @@ type Quota struct {
 	Total     uint
 }
 
+func (*Quota) TableName() string {
+	return "push_sms_quota"
+}
+
 func (v *Quota) CheckAvailableCount(user_id uint) (uint, error) {
 	if err := DB.Where("user_id=?", user_id).First(&v).Error; err != nil {
 		return 0, err

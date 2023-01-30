@@ -16,6 +16,10 @@ type Record struct {
 	UserId     uint
 }
 
+func (*Record) TableName() string {
+	return "push_sms_record"
+}
+
 func (v *Record) Create(req *service.SmsRequest) error {
 	v.Content = req.Content
 	v.Platform = "nowcn"

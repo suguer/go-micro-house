@@ -74,19 +74,3 @@ func migration() {
 		fmt.Printf("err: %v\n", err)
 	}
 }
-
-func Paginate(pageSize, pageIndex int) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		if pageSize == 0 {
-			pageSize = 20
-		}
-		if pageIndex == 0 {
-			pageIndex = 1
-		}
-		offset := (pageIndex - 1) * pageSize
-		if offset < 0 {
-			offset = 0
-		}
-		return db.Offset(offset).Limit(pageSize)
-	}
-}
