@@ -53,6 +53,15 @@ func (r *Router) Start() *gin.Engine {
 
 			}
 		}
+
+		// 推送服务
+		pushGroup := v1.Group("/push").Use(middleware.Token())
+		{
+			s := &handler.PushService{}
+			pushGroup.POST("/create", s.Create)
+			pushGroup.GET("/index", s.Index)
+		}
+
 		// 需要登录保护
 		// authed := v1.Group("/")
 		// authed.Use(middleware.JWT())

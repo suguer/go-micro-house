@@ -3,6 +3,7 @@ package main
 import (
 	"api-gateway/config"
 	"api-gateway/discovery"
+	"api-gateway/internal/crontab"
 	"api-gateway/internal/service"
 	"api-gateway/pkg/utils"
 	"api-gateway/routes"
@@ -22,9 +23,9 @@ import (
 
 func main() {
 	config.InitConfig()
-	arr := viper.GetStringMap("domain")
-	fmt.Printf("arr: %v\n", arr)
+	crontab.InitCrontab()
 	go startListen() //转载路由
+
 	{
 		osSignals := make(chan os.Signal, 1)
 		signal.Notify(osSignals, os.Interrupt, os.Kill, syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL)
@@ -85,6 +86,8 @@ func GetService(serviceName string, conn *grpc.ClientConn) interface{} {
 		return service.NewHouseServiceClient(conn)
 	case "house_group":
 		return service.NewHouseGroupServiceClient(conn)
+	case "sms":
+		return service.NewSmsServiceClient(conn)
 	}
 	return nil
 }
