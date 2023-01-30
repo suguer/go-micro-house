@@ -1,0 +1,18 @@
+syntax="proto3";
+package pb;
+option go_package = "/internal/service;service";
+
+message SmsRecordModel {
+  // @inject_tag: json:"id"
+  uint32 Id=1;
+    // @inject_tag: json:"content"
+    string Content=2;
+    // @inject_tag: json:"status"
+    string Status=3;
+    // @inject_tag: json:"user_id"
+    uint32 UserId=4;
+    // @inject_tag: json:"error"
+    string Error=5;
+    // @inject_tag: json:"created_at"
+    string CreatedAt=6;
+}
