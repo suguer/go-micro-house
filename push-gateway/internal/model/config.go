@@ -6,18 +6,21 @@ import (
 	"gorm.io/gorm"
 )
 
-type Quota struct {
+type Config struct {
 	gorm.Model
-	UserId    uint
-	Available uint
-	Total     uint
+	UserId     uint
+	Available  uint
+	Total      uint
+	Status     string
+	Day        string
+	Expiration uint
 }
 
-func (*Quota) TableName() string {
-	return "push_sms_quota"
+func (*Config) TableName() string {
+	return "push_sms_config"
 }
 
-func (v *Quota) CheckAvailableCount(user_id uint) (uint, error) {
+func (v *Config) CheckAvailableCount(user_id uint) (uint, error) {
 	if err := DB.Where("user_id=?", user_id).First(&v).Error; err != nil {
 		return 0, err
 	}
@@ -27,7 +30,7 @@ func (v *Quota) CheckAvailableCount(user_id uint) (uint, error) {
 	return v.Available, nil
 }
 
-func (v *Quota) Consume(count uint) error {
+func (v *Config) Consume(count uint) error {
 	v.Available = v.Available - count
 	DB.Save(&v)
 	return nil

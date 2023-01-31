@@ -36,8 +36,8 @@ func (*SmsService) Index(ctx context.Context, req *service.SmsIndexRequest) (res
 
 func (*SmsService) Create(ctx context.Context, req *service.SmsRequest) (resp *service.SmsResponse, err error) {
 	resp = new(service.SmsResponse)
-	var quota model.Quota
-	_, err = quota.CheckAvailableCount(uint(req.UserId))
+	var config model.Config
+	_, err = config.CheckAvailableCount(uint(req.UserId))
 	if err != nil {
 		return resp, err
 	}
@@ -50,7 +50,7 @@ func (*SmsService) Create(ctx context.Context, req *service.SmsRequest) (resp *s
 			record.Error = err.Error()
 			model.DB.Save(&record)
 		} else {
-			quota.Consume(1)
+			config.Consume(1)
 			record.Status = "success"
 			model.DB.Save(&record)
 		}
