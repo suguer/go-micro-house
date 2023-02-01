@@ -45,7 +45,7 @@ func (*SmsService) Create(ctx context.Context, req *service.SmsRequest) (resp *s
 	err = record.Create(req)
 	if err == nil {
 		client := gateway.NowcnGateway{}
-		if err = client.SendSms(); err != nil {
+		if err = client.SendMessage(req.Content, ""); err != nil {
 			record.Status = "fail"
 			record.Error = err.Error()
 			model.DB.Save(&record)
