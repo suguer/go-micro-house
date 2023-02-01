@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"push-gateway/internal/service"
 
 	"gorm.io/gorm"
 )
@@ -34,4 +35,16 @@ func (v *Config) Consume(count uint) error {
 	v.Available = v.Available - count
 	DB.Save(&v)
 	return nil
+}
+
+func (v *Config) Build() *service.SmsConfigModel {
+	return &service.SmsConfigModel{
+		UserId:     uint32(v.UserId),
+		Available:  uint32(v.Available),
+		Total:      uint32(v.Total),
+		Status:     v.Status,
+		Day:        v.Day,
+		Expiration: uint32(v.Expiration),
+		// CreatedAt: v.CreatedAt.Format("2006-01-02 15:04:05"),
+	}
 }

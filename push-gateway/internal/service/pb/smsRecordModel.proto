@@ -10,9 +10,15 @@ message SmsRecordModel {
     // @inject_tag: json:"status"
     string Status=3;
     // @inject_tag: json:"user_id"
-    uint32 UserId=4;
+    uint32 UserId=4; 
     // @inject_tag: json:"error"
     string Error=5;
     // @inject_tag: json:"created_at"
     string CreatedAt=6;
+        // @inject_tag: json:"house_id"
+        uint32 HouseId=7; 
+        // @inject_tag: json:"contract_id"
+        uint32 ContractId=8; 
+        // @inject_tag: json:"record_id"
+        uint32 RecordId=9; 
 }

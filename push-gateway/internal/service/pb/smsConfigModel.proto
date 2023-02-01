@@ -1,0 +1,20 @@
+syntax="proto3";
+package pb;
+option go_package = "/internal/service;service";
+
+message SmsConfigModel {
+  // @inject_tag: json:"id"
+  uint32 Id=1;
+    // @inject_tag: json:"user_id"
+    uint32 UserId=2;
+    // @inject_tag: json:"status"
+    string Status=3;
+    // @inject_tag: json:"available"
+    uint32 Available=4;
+    // @inject_tag: json:"total"
+    uint32 Total=5;
+       // @inject_tag: json:"day" form:"day" uri:"day"
+       string Day=6;
+         // @inject_tag: json:"expiration" form:"expiration" uri:"expiration"
+    uint32 Expiration=7;
+}

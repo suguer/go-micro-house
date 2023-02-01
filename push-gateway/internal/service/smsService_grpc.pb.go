@@ -23,7 +23,8 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SmsServiceClient interface {
 	Index(ctx context.Context, in *SmsIndexRequest, opts ...grpc.CallOption) (*SmsIndexResponse, error)
-	Create(ctx context.Context, in *SmsRequest, opts ...grpc.CallOption) (*SmsResponse, error)
+	Create(ctx context.Context, in *SmsCreateRequest, opts ...grpc.CallOption) (*SmsResponse, error)
+	SetConfig(ctx context.Context, in *SmsConfigRequest, opts ...grpc.CallOption) (*SmsConfigResponse, error)
 }
 
 type smsServiceClient struct {
@@ -43,9 +44,18 @@ func (c *smsServiceClient) Index(ctx context.Context, in *SmsIndexRequest, opts 
 	return out, nil
 }
 
-func (c *smsServiceClient) Create(ctx context.Context, in *SmsRequest, opts ...grpc.CallOption) (*SmsResponse, error) {
+func (c *smsServiceClient) Create(ctx context.Context, in *SmsCreateRequest, opts ...grpc.CallOption) (*SmsResponse, error) {
 	out := new(SmsResponse)
 	err := c.cc.Invoke(ctx, "/pb.SmsService/Create", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *smsServiceClient) SetConfig(ctx context.Context, in *SmsConfigRequest, opts ...grpc.CallOption) (*SmsConfigResponse, error) {
+	out := new(SmsConfigResponse)
+	err := c.cc.Invoke(ctx, "/pb.SmsService/SetConfig", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +67,8 @@ func (c *smsServiceClient) Create(ctx context.Context, in *SmsRequest, opts ...g
 // for forward compatibility
 type SmsServiceServer interface {
 	Index(context.Context, *SmsIndexRequest) (*SmsIndexResponse, error)
-	Create(context.Context, *SmsRequest) (*SmsResponse, error)
+	Create(context.Context, *SmsCreateRequest) (*SmsResponse, error)
+	SetConfig(context.Context, *SmsConfigRequest) (*SmsConfigResponse, error)
 	mustEmbedUnimplementedSmsServiceServer()
 }
 
@@ -68,8 +79,11 @@ type UnimplementedSmsServiceServer struct {
 func (UnimplementedSmsServiceServer) Index(context.Context, *SmsIndexRequest) (*SmsIndexResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Index not implemented")
 }
-func (UnimplementedSmsServiceServer) Create(context.Context, *SmsRequest) (*SmsResponse, error) {
+func (UnimplementedSmsServiceServer) Create(context.Context, *SmsCreateRequest) (*SmsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+}
+func (UnimplementedSmsServiceServer) SetConfig(context.Context, *SmsConfigRequest) (*SmsConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetConfig not implemented")
 }
 func (UnimplementedSmsServiceServer) mustEmbedUnimplementedSmsServiceServer() {}
 
@@ -103,7 +117,7 @@ func _SmsService_Index_Handler(srv interface{}, ctx context.Context, dec func(in
 }
 
 func _SmsService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SmsRequest)
+	in := new(SmsCreateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -115,7 +129,25 @@ func _SmsService_Create_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/pb.SmsService/Create",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SmsServiceServer).Create(ctx, req.(*SmsRequest))
+		return srv.(SmsServiceServer).Create(ctx, req.(*SmsCreateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SmsService_SetConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SmsConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SmsServiceServer).SetConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.SmsService/SetConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SmsServiceServer).SetConfig(ctx, req.(*SmsConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -134,6 +166,10 @@ var SmsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Create",
 			Handler:    _SmsService_Create_Handler,
+		},
+		{
+			MethodName: "SetConfig",
+			Handler:    _SmsService_SetConfig_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

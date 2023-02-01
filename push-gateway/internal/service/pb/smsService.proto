@@ -1,6 +1,7 @@
 syntax="proto3";
 package pb;
 import "smsRecordModel.proto";
+import "smsConfigModel.proto";
 import "pagination.proto";
 option go_package = "/internal/service;service";
 
@@ -23,17 +24,40 @@ message SmsIndexResponse{
     repeated SmsRecordModel Data=1;
     Pagination Pagination=2;
 }
-message SmsRequest{
+message SmsCreateRequest{
      // @inject_tag: json:"content" form:"content" uri:"content"
  string Content=1;
      // @inject_tag: json:"user_id" form:"user_id" uri:"user_id"
  uint32 UserId=2;
+    // @inject_tag: json:"house_id"
+ uint32 HouseId=3; 
+    // @inject_tag: json:"contract_id"
+ uint32 ContractId=4; 
+    // @inject_tag: json:"record_id"
+uint32 RecordId=5; 
 
 }
 message SmsResponse{
     int32 Code=1;
 }
+
+message SmsConfigRequest{
+    // @inject_tag: json:"user_id" form:"user_id" uri:"user_id"
+    uint32 UserId=1;
+    // @inject_tag: json:"day" form:"day" uri:"day"
+    string Day=2;
+    // @inject_tag: json:"status" form:"status" uri:"status"
+    string Status=3;
+    // @inject_tag: json:"expiration" form:"expiration" uri:"expiration"
+    uint32 Expiration=4;
+
+}
+message SmsConfigResponse{
+    SmsConfigModel Data=1;
+}
+
 service SmsService{
     rpc Index(SmsIndexRequest) returns(SmsIndexResponse);
-    rpc Create(SmsRequest) returns(SmsResponse);
+    rpc Create(SmsCreateRequest) returns(SmsResponse);
+    rpc SetConfig(SmsConfigRequest) returns(SmsConfigResponse);
 }

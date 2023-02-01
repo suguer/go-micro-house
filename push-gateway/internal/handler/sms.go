@@ -57,3 +57,15 @@ func (*SmsService) Create(ctx context.Context, req *service.SmsRequest) (resp *s
 	}
 	return resp, err
 }
+
+func (*SmsService) SetConfig(ctx context.Context, req *service.SmsConfigRequest) (resp *service.SmsConfigResponse, err error) {
+	resp = new(service.SmsConfigResponse)
+	var config model.Config
+	model.DB.FirstOrCreate(&config, model.Config{UserId: uint(req.UserId)})
+	config.Day = req.Day
+	config.Status = req.Status
+	config.Expiration = uint(req.Expiration)
+	model.DB.Save(&config)
+	resp.Data = config.Build()
+	return resp, err
+}
