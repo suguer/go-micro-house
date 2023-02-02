@@ -25,6 +25,7 @@ type SmsServiceClient interface {
 	Index(ctx context.Context, in *SmsIndexRequest, opts ...grpc.CallOption) (*SmsIndexResponse, error)
 	Create(ctx context.Context, in *SmsCreateRequest, opts ...grpc.CallOption) (*SmsResponse, error)
 	SetConfig(ctx context.Context, in *SmsConfigRequest, opts ...grpc.CallOption) (*SmsConfigResponse, error)
+	GetConfig(ctx context.Context, in *SmsConfigRequest, opts ...grpc.CallOption) (*SmsConfigResponse, error)
 }
 
 type smsServiceClient struct {
@@ -62,6 +63,15 @@ func (c *smsServiceClient) SetConfig(ctx context.Context, in *SmsConfigRequest, 
 	return out, nil
 }
 
+func (c *smsServiceClient) GetConfig(ctx context.Context, in *SmsConfigRequest, opts ...grpc.CallOption) (*SmsConfigResponse, error) {
+	out := new(SmsConfigResponse)
+	err := c.cc.Invoke(ctx, "/pb.SmsService/GetConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SmsServiceServer is the server API for SmsService service.
 // All implementations must embed UnimplementedSmsServiceServer
 // for forward compatibility
@@ -69,6 +79,7 @@ type SmsServiceServer interface {
 	Index(context.Context, *SmsIndexRequest) (*SmsIndexResponse, error)
 	Create(context.Context, *SmsCreateRequest) (*SmsResponse, error)
 	SetConfig(context.Context, *SmsConfigRequest) (*SmsConfigResponse, error)
+	GetConfig(context.Context, *SmsConfigRequest) (*SmsConfigResponse, error)
 	mustEmbedUnimplementedSmsServiceServer()
 }
 
@@ -84,6 +95,9 @@ func (UnimplementedSmsServiceServer) Create(context.Context, *SmsCreateRequest) 
 }
 func (UnimplementedSmsServiceServer) SetConfig(context.Context, *SmsConfigRequest) (*SmsConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetConfig not implemented")
+}
+func (UnimplementedSmsServiceServer) GetConfig(context.Context, *SmsConfigRequest) (*SmsConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetConfig not implemented")
 }
 func (UnimplementedSmsServiceServer) mustEmbedUnimplementedSmsServiceServer() {}
 
@@ -152,6 +166,24 @@ func _SmsService_SetConfig_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SmsService_GetConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SmsConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SmsServiceServer).GetConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.SmsService/GetConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SmsServiceServer).GetConfig(ctx, req.(*SmsConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SmsService_ServiceDesc is the grpc.ServiceDesc for SmsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +202,10 @@ var SmsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetConfig",
 			Handler:    _SmsService_SetConfig_Handler,
+		},
+		{
+			MethodName: "GetConfig",
+			Handler:    _SmsService_GetConfig_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

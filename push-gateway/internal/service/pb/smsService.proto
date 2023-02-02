@@ -62,4 +62,5 @@ service SmsService{
     rpc Index(SmsIndexRequest) returns(SmsIndexResponse);
     rpc Create(SmsCreateRequest) returns(SmsResponse);
     rpc SetConfig(SmsConfigRequest) returns(SmsConfigResponse);
+    rpc GetConfig(SmsConfigRequest) returns(SmsConfigResponse);
 }

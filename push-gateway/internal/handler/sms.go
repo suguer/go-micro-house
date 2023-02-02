@@ -69,3 +69,11 @@ func (*SmsService) SetConfig(ctx context.Context, req *service.SmsConfigRequest)
 	resp.Data = config.Build()
 	return resp, err
 }
+
+func (*SmsService) GetConfig(ctx context.Context, req *service.SmsConfigRequest) (resp *service.SmsConfigResponse, err error) {
+	resp = new(service.SmsConfigResponse)
+	var config model.Config
+	model.DB.Where("user_id=?", req.UserId).First(&config)
+	resp.Data = config.Build()
+	return resp, err
+}

@@ -4,6 +4,7 @@ use (
 	./api-gateway
 	./contract
 	./house
+	./push-gateway
 	./third-party
 	./user
 )
