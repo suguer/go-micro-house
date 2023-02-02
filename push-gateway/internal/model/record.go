@@ -9,6 +9,7 @@ import (
 type Record struct {
 	gorm.Model
 	Content    string
+	Mobile     string
 	Status     string
 	Platform   string
 	Error      string
@@ -24,6 +25,7 @@ func (*Record) TableName() string {
 }
 
 func (v *Record) Create(req *service.SmsCreateRequest) error {
+	v.Mobile = req.Mobile
 	v.Content = req.Content
 	v.Platform = "nowcn"
 	v.Status = "init"
@@ -44,6 +46,7 @@ func BuildRecord(v *Record) *service.SmsRecordModel {
 		Id:         uint32(v.ID),
 		UserId:     uint32(v.UserId),
 		Content:    v.Content,
+		Mobile:     v.Mobile,
 		Status:     v.Status,
 		Error:      v.Error,
 		CreatedAt:  v.CreatedAt.Format("2006-01-02 15:04:05"),

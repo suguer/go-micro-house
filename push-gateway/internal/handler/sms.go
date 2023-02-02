@@ -34,7 +34,7 @@ func (*SmsService) Index(ctx context.Context, req *service.SmsIndexRequest) (res
 	return resp, err
 }
 
-func (*SmsService) Create(ctx context.Context, req *service.SmsRequest) (resp *service.SmsResponse, err error) {
+func (*SmsService) Create(ctx context.Context, req *service.SmsCreateRequest) (resp *service.SmsResponse, err error) {
 	resp = new(service.SmsResponse)
 	var config model.Config
 	_, err = config.CheckAvailableCount(uint(req.UserId))
@@ -45,7 +45,7 @@ func (*SmsService) Create(ctx context.Context, req *service.SmsRequest) (resp *s
 	err = record.Create(req)
 	if err == nil {
 		client := gateway.NowcnGateway{}
-		if err = client.SendMessage(req.Content, ""); err != nil {
+		if err = client.SendMessage(req.Content, req.Mobile); err != nil {
 			record.Status = "fail"
 			record.Error = err.Error()
 			model.DB.Save(&record)

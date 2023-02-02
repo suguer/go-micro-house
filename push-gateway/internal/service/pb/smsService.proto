@@ -35,6 +35,8 @@ message SmsCreateRequest{
  uint32 ContractId=4; 
     // @inject_tag: json:"record_id"
 uint32 RecordId=5; 
+    // @inject_tag: json:"mobile" form:"mobile" uri:"mobile"
+ string Mobile=6;
 
 }
 message SmsResponse{

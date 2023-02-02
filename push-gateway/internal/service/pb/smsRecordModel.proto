@@ -21,4 +21,6 @@ message SmsRecordModel {
         uint32 ContractId=8; 
         // @inject_tag: json:"record_id"
         uint32 RecordId=9; 
+        // @inject_tag: json:"mobile"
+        string Mobile=10; 
 }
