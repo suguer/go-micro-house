@@ -60,6 +60,8 @@ func (r *Router) Start() *gin.Engine {
 			s := &handler.PushService{}
 			pushGroup.POST("/create", s.Create)
 			pushGroup.GET("/index", s.Index)
+			pushGroup.GET("/config", s.GetConfig)
+			pushGroup.POST("/config", s.SetConfig)
 		}
 
 		// 需要登录保护

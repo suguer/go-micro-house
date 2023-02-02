@@ -14,3 +14,4 @@ domain:
   user: user
   house: house
   house_group: house
+  sms: push

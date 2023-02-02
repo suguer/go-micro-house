@@ -24,6 +24,7 @@ import (
 func main() {
 	config.InitConfig()
 	crontab.InitCrontab()
+	utils.InitRedis()
 	go startListen() //转载路由
 
 	{
