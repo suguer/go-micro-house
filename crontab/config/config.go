@@ -1,16 +1,15 @@
 package config
 
 import (
-	"api-gateway/pkg/utils"
-	"fmt"
+	"path/filepath"
+	"runtime"
 
 	"github.com/spf13/viper"
 )
 
 func InitConfig() {
-
-	workDir := utils.WorkDir()
-	fmt.Printf("workDir: %v\n", workDir)
+	_, workDir, _, _ := runtime.Caller(0)
+	workDir = filepath.Dir(filepath.Dir(workDir))
 	viper.SetConfigName("config")
 	viper.SetConfigType("yml")
 	viper.AddConfigPath(workDir + "/config")

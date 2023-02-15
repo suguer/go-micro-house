@@ -6,16 +6,13 @@ etcd:
   address: 127.0.0.1:2379
 
 domain:
-  user: user
-  house: house
-  house_group: house
   sms: push
 
 mysql:
   driverName: mysql
   host: 127.0.0.1
   port: 3306
-  database: go-micro
-  username: go-micro
-  password: go-micro
+  database: myuplus
+  username: root
+  password: 123456
   charset: utf8mb4

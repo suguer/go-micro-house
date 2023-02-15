@@ -66,7 +66,7 @@ func migration() {
 	//自动迁移模式
 	err := DB.Set("gorm:table_options", "charset=utf8mb4").
 		AutoMigrate(
-		// &Template{},
+			&SmsConfig{},
 		)
 	if err != nil {
 		fmt.Printf("err: %v\n", err)

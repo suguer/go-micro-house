@@ -4,6 +4,7 @@ import (
 	"context"
 	"crontab/config"
 	"crontab/internal/handler"
+	"crontab/internal/model"
 	"crontab/internal/service"
 	"crontab/routes"
 	"fmt"
@@ -23,6 +24,8 @@ import (
 func main() {
 
 	config.InitConfig()
+	model.InitDB()
+	routes.InitConfig()
 	go startListen() //转载路由
 
 	{
@@ -40,9 +43,7 @@ func startListen() {
 	resolver.Register(etcdRegister)
 	ctx, _ := context.WithTimeout(context.Background(), 3*time.Second)
 	arr := viper.GetStringMapString("domain")
-	router := routes.NewRouter()
 	for ServiceName, ServicePath := range arr {
-		fmt.Printf("ServiceName: %v\n", ServiceName)
 		// RPC 连接
 		conn, err := RPCConnect(ctx, ServicePath, etcdRegister)
 		if err != nil {
@@ -50,7 +51,7 @@ func startListen() {
 			return
 		}
 		Service := GetService(ServiceName, conn)
-		router.AddService(ServiceName, Service)
+		routes.RData.AddService(ServiceName, Service)
 
 	}
 	c := cron.New()
@@ -67,6 +68,8 @@ func GetService(serviceName string, conn *grpc.ClientConn) interface{} {
 		return service.NewHouseServiceClient(conn)
 	case "house_group":
 		return service.NewHouseGroupServiceClient(conn)
+	case "sms":
+		return service.NewSmsServiceClient(conn)
 	}
 	return nil
 }
