@@ -13,7 +13,8 @@ import (
 
 func init() {
 	handlers = append(handlers, Crontab{
-		Rule: "* * * * *",
+		// Rule: "* * * * *",
+		Rule: "30 8 * * *",
 		Fun:  RecondCreateAuto,
 	})
 
@@ -36,8 +37,6 @@ func RecondCreateAuto(c context.Context) {
 			day, _ := strconv.Atoi(v)
 			StartAt = append(StartAt, time.Now().AddDate(0, 0, day).Format("2006-01-02"))
 		}
-		fmt.Printf("Day: %v\n", Day)
-		fmt.Printf("StartAt: %v\n", StartAt)
 		var record_list []model.Record
 		model.DB.Model(&model.Record{}).
 			Where("user_id =?", sc.UserId).
@@ -45,18 +44,23 @@ func RecondCreateAuto(c context.Context) {
 			Where("status =?", "normal").
 			Where("type =?", "rent").
 			Find(&record_list)
-		fmt.Printf("len(record_list): %v\n", len(record_list))
 		for _, r := range record_list {
-			fmt.Printf("r.ID: %v\n", r.ID)
+			var contract model.Contract
+			var house model.House
+			model.DB.First(&contract, r.ContractID)
+			model.DB.First(&house, r.HouseID)
 			var req service.SmsCreateRequest
-			req.Content = "asdasd"
-			req.UserId = 1
-			resp, err := ser.Create(context.Background(), &req)
-			fmt.Printf("err: %v\n", err)
-			if err != nil {
-				continue
-			}
-			fmt.Printf("resp.Code: %v\n", resp.Code)
+			req.Content = fmt.Sprintf("%v,%v于%v到期,租金%v元,请联系并缴纳租金,如已缴纳请忽略",
+				*contract.TargetName,
+				*house.Title,
+				r.StartAt.Format("2006年01月02日"),
+				r.Money)
+			req.UserId = uint32(r.UserID)
+			req.HouseId = uint32(r.HouseID)
+			req.ContractId = uint32(r.ContractID)
+			req.RecordId = uint32(r.ID)
+			// req.Mobile = *contract.TargetPhone
+			ser.Create(context.Background(), &req)
 
 		}
 	}

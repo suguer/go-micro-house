@@ -65,9 +65,7 @@ func Database(connString string) error {
 func migration() {
 	//自动迁移模式
 	err := DB.Set("gorm:table_options", "charset=utf8mb4").
-		AutoMigrate(
-			&SmsConfig{},
-		)
+		AutoMigrate()
 	if err != nil {
 		fmt.Printf("err: %v\n", err)
 	}
