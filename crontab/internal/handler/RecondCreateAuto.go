@@ -49,19 +49,21 @@ func RecondCreateAuto(c context.Context) {
 			var house model.House
 			model.DB.First(&contract, r.ContractID)
 			model.DB.First(&house, r.HouseID)
+			if *contract.TargetPhone == "" {
+				continue
+			}
 			var req service.SmsCreateRequest
 			req.Content = fmt.Sprintf("%v,%v于%v到期,租金%v元,请联系并缴纳租金,如已缴纳请忽略",
 				*contract.TargetName,
 				*house.Title,
-				r.StartAt.Format("2006年01月02日"),
+				r.StartAt.Format("01月02日"),
 				r.Money)
 			req.UserId = uint32(r.UserID)
 			req.HouseId = uint32(r.HouseID)
 			req.ContractId = uint32(r.ContractID)
 			req.RecordId = uint32(r.ID)
-			// req.Mobile = *contract.TargetPhone
+			req.Mobile = *contract.TargetPhone
 			ser.Create(context.Background(), &req)
-
 		}
 	}
 }
