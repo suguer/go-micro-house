@@ -14,7 +14,7 @@ import (
 func init() {
 	handlers = append(handlers, Crontab{
 		// Rule: "* * * * *",
-		Rule: "30 8 * * *",
+		Rule: "30 10 * * *",
 		Fun:  RecondCreateAuto,
 	})
 
