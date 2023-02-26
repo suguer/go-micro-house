@@ -22,10 +22,10 @@ func (*SmsService) Index(ctx context.Context, req *service.SmsIndexRequest) (res
 	pagination := model.NewPagination(req.Current, req.PageSize)
 	var list []model.Record
 	err = model.DB.Model(&model.Record{}).
+		Order("id desc").
 		Scopes(pagination.Paginate()).
 		Where("user_id=?", req.UserId).
 		Find(&list).Limit(-1).Offset(-1).
-		Order("id desc").
 		Count(&pagination.Total).Error
 	resp.Pagination = pagination.Build()
 	resp.Data = make([]*service.SmsRecordModel, len(list))
